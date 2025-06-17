@@ -12,17 +12,36 @@
     text-align: center;
   }
   canvas {
-    display: block;
+    display: none;
     margin: 0 auto;
+    background: #000;
+  }
+  #titleScreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background: #000;
   }
 </style>
 </head>
 <body>
+<div id="titleScreen">
+  <h1>ブロック崩しゲーム</h1>
+  <button id="startButton">スタート</button>
+</div>
 <canvas id="gameCanvas" width="480" height="320"></canvas>
 <script>
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+const titleScreen = document.getElementById('titleScreen');
+const startButton = document.getElementById('startButton');
+let animationId;
 
 const paddleHeight = 10;
 const paddleWidth = 75;
@@ -51,12 +70,44 @@ const brickColor = '#00FF80';
 let score = 0;
 
 const bricks = [];
-for(let c=0; c<brickColumnCount; c++) {
-  bricks[c] = [];
-  for(let r=0; r<brickRowCount; r++) {
-    bricks[c][r] = { x: 0, y: 0, status: 1 };
+function initBricks() {
+  for(let c=0; c<brickColumnCount; c++) {
+    bricks[c] = [];
+    for(let r=0; r<brickRowCount; r++) {
+      bricks[c][r] = { x: 0, y: 0, status: 1 };
+    }
   }
 }
+initBricks();
+
+function initGame() {
+  paddleX = (canvas.width - paddleWidth) / 2;
+  x = canvas.width / 2;
+  y = canvas.height - 30;
+  dx = 2;
+  dy = -2;
+  score = 0;
+  rightPressed = false;
+  leftPressed = false;
+  initBricks();
+}
+
+function showTitle() {
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+  }
+  canvas.style.display = 'none';
+  titleScreen.style.display = 'flex';
+}
+
+function startGame() {
+  initGame();
+  titleScreen.style.display = 'none';
+  canvas.style.display = 'block';
+  draw();
+}
+
+startButton.addEventListener('click', startGame);
 
 function keyDownHandler(e) {
   if(e.key === 'Right' || e.key === 'ArrowRight') {
@@ -87,8 +138,9 @@ function collisionDetection() {
           b.status = 0;
           score++;
           if(score === brickRowCount*brickColumnCount) {
+            cancelAnimationFrame(animationId);
             alert('おめでとう！ 全てのブロックを破壊しました！');
-            document.location.reload();
+            showTitle();
           }
         }
       }
@@ -153,8 +205,9 @@ function draw() {
     if(x > paddleX && x < paddleX + paddleWidth) {
       dy = -dy;
     } else {
+      cancelAnimationFrame(animationId);
       alert('ゲームオーバー');
-      document.location.reload();
+      showTitle();
     }
   }
 
@@ -166,10 +219,10 @@ function draw() {
 
   x += dx;
   y += dy;
-  requestAnimationFrame(draw);
+  animationId = requestAnimationFrame(draw);
 }
 
-draw();
+showTitle();
 </script>
 </body>
 </html>
