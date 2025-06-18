@@ -69,6 +69,33 @@ const brickColor = '#00FF80';
 
 let score = 0;
 
+// Particle class
+class Particle {
+  constructor(x, y, dx, dy, size, color, life) {
+    this.x = x;
+    this.y = y;
+    this.dx = dx;
+    this.dy = dy;
+    this.size = size;
+    this.color = color;
+    this.life = life;
+    this.maxLife = life; // Store initial life
+  }
+}
+
+function drawParticles() {
+  for (const p of particles) {
+    const opacity = p.life / p.maxLife;
+    ctx.globalAlpha = opacity;
+    ctx.fillStyle = p.color;
+    ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
+  }
+  ctx.globalAlpha = 1.0; // Reset globalAlpha
+}
+
+// Particles array
+const particles = [];
+
 const bricks = [];
 function initBricks() {
   for(let c=0; c<brickColumnCount; c++) {
@@ -138,6 +165,21 @@ function collisionDetection() {
           dy = -dy;
           b.status = 0;
           score++;
+
+          // Create particles
+          const brickCenterX = b.x + brickWidth / 2;
+          const brickCenterY = b.y + brickHeight / 2;
+          for (let i = 0; i < 12; i++) { // Increased particle count
+            let pDx = (Math.random() - 0.5) * 4;
+            let pDy = (Math.random() - 0.5) * 4;
+            if (pDx === 0 && pDy === 0) {
+                pDx = 1;
+            }
+            const pSize = Math.random() * 2 + 2;
+            const pLife = Math.random() * 20 + 30; // Increased particle life (30-50)
+            particles.push(new Particle(brickCenterX, brickCenterY, pDx, pDy, pSize, brickColor, pLife));
+          }
+
           if(score === brickRowCount*brickColumnCount) {
             cancelAnimationFrame(animationId);
             alert('おめでとう！ 全てのブロックを破壊しました！');
@@ -189,13 +231,27 @@ function drawScore() {
   ctx.fillText('Score: '+score, 8, 20);
 }
 
+function updateParticles() {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.dx;
+    p.y += p.dy;
+    p.life--;
+    if (p.life <= 0) {
+      particles.splice(i, 1);
+    }
+  }
+}
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBricks();
   drawBall();
   drawPaddle();
   drawScore();
+  drawParticles(); // Draw particles after score and other elements
   collisionDetection();
+  updateParticles();
 
   if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
     dx = -dx;
