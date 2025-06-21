@@ -9,6 +9,7 @@ This document expands on the world simulation game and summarizes the key system
 
 ## NPC Life Cycle
 - Numerous NPCs inhabit the world and carry out farming, mining, and other economic activities.
+- Each NPC maintains money, materials, and intangible rights that can be transferred or traded.
 - NPCs age, marry other NPCs, give birth to children, and eventually die when they reach their life span.
 - Relationships evolve over time: NPCs can become friends, rivals, or even kill one another.
 
