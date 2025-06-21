@@ -4,9 +4,16 @@ class Agent {
     this.money = Math.floor(Math.random() * 100) + 50; // 50-150
     this.goods = Math.floor(Math.random() * 10);
     this.rawMaterials = Math.floor(Math.random() * 5); // initial materials
+    this.rights = Math.floor(Math.random() * 3); // intangible rights 0-2
     this.gatherRate = Math.ceil(Math.random() * 2); // 1-2 materials per tick
     this.productionRate = Math.ceil(Math.random() * 2); // 1-2 goods per tick
     this.price = Math.floor(Math.random() * 10) + 5; // 5-14 money per good
+  }
+
+  acquireRights() {
+    if (Math.random() < 0.3) {
+      this.rights += 1;
+    }
   }
 
   gather() {
@@ -40,6 +47,7 @@ function updateAgents() {
   for (const agent of agents) {
     agent.gather();
     agent.produce();
+    agent.acquireRights();
     const partner = agents[Math.floor(Math.random() * agents.length)];
     if (partner !== agent) {
       agent.attemptTrade(partner);
@@ -53,7 +61,7 @@ function render() {
   tbody.innerHTML = '';
   for (const agent of agents) {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${agent.id}</td><td>${agent.money}</td><td>${agent.rawMaterials}</td><td>${agent.goods}</td>`;
+    tr.innerHTML = `<td>${agent.id}</td><td>${agent.money}</td><td>${agent.rawMaterials}</td><td>${agent.goods}</td><td>${agent.rights}</td>`;
     tbody.appendChild(tr);
   }
 }

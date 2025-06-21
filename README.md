@@ -4,12 +4,12 @@ This project is a simple simulation of a miniature economy where multiple agents
 
 ## How it Works
 
-- Each agent has money, raw materials, goods, a rate for gathering materials, a production rate, and a price for selling goods.
+- Each agent has money, raw materials, goods, intangible rights, a rate for gathering materials, a production rate, and a price for selling goods.
 - Every second the simulation updates:
   - Agents gather raw materials.
   - They consume gathered materials to produce goods.
   - Each agent randomly selects another agent and attempts to sell a good if the buyer can afford it.
-- The table on the page shows the current money, raw materials, and goods for each agent.
+- The table on the page shows the current money, raw materials, goods, and rights for each agent.
 
 ## Usage
 
