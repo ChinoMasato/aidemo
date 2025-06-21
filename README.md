@@ -9,7 +9,7 @@ This project is a simple simulation of a miniature economy where multiple agents
   - Agents gather raw materials.
   - They consume gathered materials to produce goods.
   - Each agent randomly selects another agent and attempts to sell a good if the buyer can afford it.
-- The table on the page shows the current money, raw materials, and goods for each agent.
+- The table on the page shows the current money, raw materials, goods, and each agent's location.
 
 ## Usage
 
